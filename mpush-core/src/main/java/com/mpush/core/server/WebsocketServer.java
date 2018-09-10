@@ -28,6 +28,7 @@ import com.mpush.core.MPushServer;
 import com.mpush.core.handler.AckHandler;
 import com.mpush.core.handler.BindUserHandler;
 import com.mpush.core.handler.HandshakeHandler;
+import com.mpush.core.handler.WebSocketPushHandler;
 import com.mpush.netty.server.NettyTCPServer;
 import com.mpush.tools.config.CC;
 import io.netty.bootstrap.ServerBootstrap;
@@ -72,6 +73,7 @@ public final class WebsocketServer extends NettyTCPServer {
         messageDispatcher.register(Command.UNBIND, () -> new BindUserHandler(mPushServer));
         messageDispatcher.register(Command.PUSH, PushHandlerFactory::create);
         messageDispatcher.register(Command.ACK, () -> new AckHandler(mPushServer));
+        messageDispatcher.register(Command.GATEWAY_PUSH, () -> new WebSocketPushHandler(mPushServer.getPushCenter()));
     }
 
     @Override
