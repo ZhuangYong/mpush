@@ -22,6 +22,7 @@ package com.mpush.core.handler;
 import com.mpush.api.connection.Connection;
 import com.mpush.api.protocol.Packet;
 import com.mpush.common.handler.BaseMessageHandler;
+import com.mpush.common.message.ByteBufMessage;
 import com.mpush.common.message.gateway.GatewayPushMessage;
 import com.mpush.common.message.web.WebPushMessage;
 import com.mpush.core.push.PushCenter;
@@ -48,7 +49,7 @@ public final class WebSocketPushHandler extends BaseMessageHandler<WebPushMessag
     public void handle(WebPushMessage message) {
         Packet packet = message.getPacket();
         GatewayPushMessage msg = new GatewayPushMessage(packet, message.getConnection());
-        // packet.flags = 0;
+        packet.flags = Packet.FLAG_AUTO_ACK;
         msg.userId = message.userId;
         msg.clientType = message.clientType;
         msg.timeout = message.timeout;
