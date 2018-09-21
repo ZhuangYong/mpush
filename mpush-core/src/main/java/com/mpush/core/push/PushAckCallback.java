@@ -4,6 +4,7 @@ import com.mpush.api.spi.push.IPushMessage;
 import com.mpush.core.ack.AckCallback;
 import com.mpush.core.ack.AckTask;
 import com.mpush.tools.common.TimeLine;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 
 public final class PushAckCallback implements AckCallback {
@@ -20,12 +21,12 @@ public final class PushAckCallback implements AckCallback {
     @Override
     public void onSuccess(AckTask task) {
         pushCenter.getPushListener().onAckSuccess(message, timeLine.successEnd().getTimePoints());
-        Logs.PUSH.info("[SingleUserPush] client ack success, timeLine={}, task={}", timeLine, task);
+        Logs.PUSH.info("[SingleUserPush] client ack success, timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.SINGLE_USER_PUSH_CLIENT_ACK_SUCCESS);
     }
 
     @Override
     public void onTimeout(AckTask task) {
         pushCenter.getPushListener().onTimeout(message, timeLine.timeoutEnd().getTimePoints());
-        Logs.PUSH.warn("[SingleUserPush] client ack timeout, timeLine={}, task={}", timeLine, task);
+        Logs.PUSH.warn("[SingleUserPush] client ack timeout, timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.SINGLE_USER_PUSH_CLIENT_ACK_TIMEOUT);
     }
 }

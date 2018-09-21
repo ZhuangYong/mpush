@@ -27,6 +27,7 @@ import com.mpush.client.push.PushRequest;
 import com.mpush.client.push.PushRequestBus;
 import com.mpush.common.handler.BaseMessageHandler;
 import com.mpush.common.message.ErrorMessage;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 
 import static com.mpush.common.ErrorCode.OFFLINE;
@@ -56,11 +57,11 @@ public final class GatewayErrorHandler extends BaseMessageHandler<ErrorMessage> 
         if (message.cmd == Command.GATEWAY_PUSH.cmd) {
             PushRequest request = pushRequestBus.getAndRemove(message.getSessionId());
             if (request == null) {
-                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}", message);
+                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}, dType={}", message, DetailTypes.RECEIVE_GATEWAY_RESPONSE_REQUEST_TIMEOUT);
                 return;
             }
 
-            Logs.PUSH.warn("receive an error gateway response, message={}", message);
+            Logs.PUSH.warn("receive an error gateway response, message={}, dType={}", message, DetailTypes.RECEIVE_ERROR_GATEWAY_RESPONSE);
             if (message.code == OFFLINE.errorCode) {//用户离线
                 request.onOffline();
             } else if (message.code == PUSH_CLIENT_FAILURE.errorCode) {//下发到客户端失败

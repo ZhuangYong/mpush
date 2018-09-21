@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true">
+    <conversionRule conversionWord="db" converterClass="com.mpush.test.util.LogDbType" />
     <property name="log.root.level" value="${log.root.level}"/> <!-- 日志级别 -->
     <!-- app log -->
     <appender name="MPUSH_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
@@ -72,7 +73,7 @@
             <level>DEBUG</level>
         </filter>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} -[push]- %msg%n</pattern>
+            <pattern>%db %d{HH:mm:ss.SSS} -[push]- %msg%n</pattern>
         </encoder>
     </appender>
 

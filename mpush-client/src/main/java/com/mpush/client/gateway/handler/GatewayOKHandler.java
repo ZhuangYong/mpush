@@ -28,6 +28,7 @@ import com.mpush.client.push.PushRequestBus;
 import com.mpush.common.handler.BaseMessageHandler;
 import com.mpush.common.message.OkMessage;
 import com.mpush.common.push.GatewayPushResult;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public final class GatewayOKHandler extends BaseMessageHandler<OkMessage> {
         if (message.cmd == Command.GATEWAY_PUSH.cmd) {
             PushRequest request = pushRequestBus.getAndRemove(message.getSessionId());
             if (request == null) {
-                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}", message);
+                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}, dType={}", message, DetailTypes.RECEIVE_GATEWAY_RESPONSE_REQUEST_TIMEOUT);
                 return;
             }
             request.onSuccess(GatewayPushResult.fromJson(message.data));//推送成功

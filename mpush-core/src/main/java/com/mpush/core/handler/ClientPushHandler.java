@@ -28,6 +28,7 @@ import com.mpush.api.spi.handler.PushHandlerFactory;
 import com.mpush.common.handler.BaseMessageHandler;
 import com.mpush.common.message.AckMessage;
 import com.mpush.common.message.PushMessage;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 
 /**
@@ -45,11 +46,11 @@ public final class ClientPushHandler extends BaseMessageHandler<PushMessage> imp
 
     @Override
     public void handle(PushMessage message) {
-        Logs.PUSH.info("receive client push message={}", message);
+        Logs.PUSH.info("receive client push message={}, dType={}", message, DetailTypes.RECEIVE_CLIENT_PUSH_MESSAGE);
 
         if (message.autoAck()) {
             AckMessage.from(message).sendRaw();
-            Logs.PUSH.info("send ack for push message={}", message);
+            Logs.PUSH.info("send ack for push message={}, dType={}", message, DetailTypes.SEND_ACK_FOR_PUSH_MESSAGE);
         }
         //biz code write here
     }

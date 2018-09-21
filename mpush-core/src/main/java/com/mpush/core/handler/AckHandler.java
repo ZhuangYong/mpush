@@ -26,6 +26,7 @@ import com.mpush.common.message.AckMessage;
 import com.mpush.core.MPushServer;
 import com.mpush.core.ack.AckTask;
 import com.mpush.core.ack.AckTaskQueue;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 
 /**
@@ -51,7 +52,7 @@ public final class AckHandler extends BaseMessageHandler<AckMessage> {
     public void handle(AckMessage message) {
         AckTask task = ackTaskQueue.getAndRemove(message.getSessionId());
         if (task == null) {//ack 超时了
-            Logs.PUSH.info("receive client ack, but task timeout message={}", message);
+            Logs.PUSH.info("receive client ack, but task timeout message={}, dType={}", message, DetailTypes.RECEIVE_CLIENT_ACK_TASK_TIMEOUT);
             return;
         }
 

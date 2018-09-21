@@ -29,6 +29,7 @@ import com.mpush.core.MPushServer;
 import com.mpush.core.ack.AckTask;
 import com.mpush.core.router.LocalRouter;
 import com.mpush.tools.common.TimeLine;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -98,7 +99,7 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
 
                 mPushServer.getPushCenter().getPushListener().onTimeout(message, timeLine.timeoutEnd().getTimePoints());
 
-                Logs.PUSH.info("[SingleUserPush] push message to client timeout, timeLine={}, message={}", timeLine, message);
+                Logs.PUSH.info("[SingleUserPush] push message to client timeout, timeLine={}, message={}, dType={}", timeLine, message, DetailTypes.SINGLE_USER_PUSH_MESSAGE_TO_CLIENT_TIMEOUT);
                 return true;
             }
         } else {
@@ -127,7 +128,7 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
         //2.如果链接失效，先删除本地失效的路由，再查下远程路由，看用户是否登陆到其他机器
         if (!connection.isConnected()) {
 
-            Logs.PUSH.warn("[SingleUserPush] find local router but conn disconnected, message={}, conn={}", message, connection);
+            Logs.PUSH.warn("[SingleUserPush] find local router but conn disconnected, message={}, conn={}, dType={}", message, connection, DetailTypes.SINGLE_USER_PUSH_FIND_LOCAL_ROUTER_CONN_DISCONNECTED);
 
             //删除已经失效的本地路由
             mPushServer.getRouterCenter().getLocalRouterManager().unRegister(userId, clientType);
@@ -139,7 +140,7 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
         if (!connection.getChannel().isWritable()) {
             mPushServer.getPushCenter().getPushListener().onFailure(message, timeLine.failureEnd().getTimePoints());
 
-            Logs.PUSH.error("[SingleUserPush] push message to client failure, tcp sender too busy, message={}, conn={}", message, connection);
+            Logs.PUSH.error("[SingleUserPush] push message to client failure, tcp sender too busy, message={}, conn={}, dType={}", message, connection, DetailTypes.SINGLE_USER_PUSH_MESSAGE_TO_CLIENT_FAILURE_TCP_SENDER_TOO_BUSY);
             return true;
         }
 
@@ -175,7 +176,7 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
 
             mPushServer.getPushCenter().getPushListener().onOffline(message, timeLine.end("offline-end").getTimePoints());
 
-            Logs.PUSH.info("[SingleUserPush] remote router not exists user offline, message={}", message);
+            Logs.PUSH.info("[SingleUserPush] remote router not exists user offline, message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_REMOTE_ROUTER_NOT_EXISTS_USER_OFFLINE);
 
             return;
         }
@@ -188,8 +189,8 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
             //删除失效的远程缓存
             mPushServer.getRouterCenter().getRemoteRouterManager().unRegister(userId, clientType);
 
-            Logs.PUSH.info("[SingleUserPush] find remote router in this pc, but local router not exists, userId={}, clientType={}, router={}"
-                    , userId, clientType, remoteRouter);
+            Logs.PUSH.info("[SingleUserPush] find remote router in this pc, but local router not exists, userId={}, clientType={}, router={}, dType={}"
+                    , userId, clientType, remoteRouter, DetailTypes.SINGLE_USER_PUSH_FIND_REMOTE_ROUTER_THIS_PC_LOCAL_ROUTER_NOT_EXISTS);
 
             return;
         }
@@ -197,7 +198,7 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
         //3.否则说明用户已经跑到另外一台机器上了；路由信息发生更改，让PushClient重推
         mPushServer.getPushCenter().getPushListener().onRedirect(message, timeLine.end("redirect-end").getTimePoints());
 
-        Logs.PUSH.info("[SingleUserPush] find router in another pc, userId={}, clientType={}, router={}", userId, clientType, remoteRouter);
+        Logs.PUSH.info("[SingleUserPush] find router in another pc, userId={}, clientType={}, router={}, dType={}", userId, clientType, remoteRouter, DetailTypes.SINGLE_USER_PUSH_FIND_ROUTER_IN_ANOTHER_PC);
 
     }
 
@@ -213,13 +214,13 @@ public final class SingleUserPushTask implements PushTask, ChannelFutureListener
                 mPushServer.getPushCenter().getPushListener().onSuccess(message, timeLine.successEnd().getTimePoints());
             }
 
-            Logs.PUSH.info("[SingleUserPush] push message to client success, timeLine={}, message={}", timeLine, message);
+            Logs.PUSH.info("[SingleUserPush] push message to client success, timeLine={}, message={}, dType={}", timeLine, message, DetailTypes.SINGLE_USER_PUSH_MESSAGE_TO_CLIENT_SUCCESS);
 
         } else {//推送失败
 
             mPushServer.getPushCenter().getPushListener().onFailure(message, timeLine.failureEnd().getTimePoints());
 
-            Logs.PUSH.error("[SingleUserPush] push message to client failure, message={}, conn={}", message, future.channel());
+            Logs.PUSH.error("[SingleUserPush] push message to client failure, message={}, conn={}, dType={}", message, future.channel(), DetailTypes.SINGLE_USER_PUSH_MESSAGE_TO_CLIENT_FAILURE);
         }
     }
 

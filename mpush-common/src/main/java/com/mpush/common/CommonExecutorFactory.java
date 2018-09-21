@@ -21,6 +21,7 @@ package com.mpush.common;
 
 import com.mpush.api.spi.common.ExecutorFactory;
 import com.mpush.tools.config.CC;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 import com.mpush.tools.thread.NamedPoolThreadFactory;
 import com.mpush.tools.thread.pool.DefaultExecutor;
@@ -83,7 +84,7 @@ public class CommonExecutorFactory implements ExecutorFactory {
             case ACK_TIMER: {
                 ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(ack_timer,
                         new NamedPoolThreadFactory(T_ARK_REQ_TIMER),
-                        (r, e) -> Logs.PUSH.error("one ack context was rejected, context=" + r)
+                        (r, e) -> Logs.PUSH.error("one ack context was rejected, context={}, dType={}", r, DetailTypes.PUSH_ACK_CONTEXT_REJECTED)
                 );
                 executor.setRemoveOnCancelPolicy(true);
                 return executor;
