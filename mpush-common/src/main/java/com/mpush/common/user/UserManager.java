@@ -84,13 +84,15 @@ public final class UserManager {
         cacheManager.del(onlineUserListKey);
     }
 
-    public void addToOnlineList(String userId) {
+    public void addToOnlineList(String userId, Integer clientType) {
         cacheManager.zAdd(onlineUserListKey, userId);
+        cacheManager.zAdd(onlineUserListKey + ":" + clientType, userId);
         LOGGER.info("user online {}", userId);
     }
 
-    public void remFormOnlineList(String userId) {
+    public void remFormOnlineList(String userId, Integer clientType) {
         cacheManager.zRem(onlineUserListKey, userId);
+        cacheManager.zAdd(onlineUserListKey + ":" + clientType, userId);
         LOGGER.info("user offline {}", userId);
     }
 
