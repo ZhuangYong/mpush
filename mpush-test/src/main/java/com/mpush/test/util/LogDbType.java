@@ -12,11 +12,11 @@ public class LogDbType extends ClassicConverter {
     public String convert(ILoggingEvent event) {
         Optional<Object> detailType = Arrays.stream(event.getArgumentArray()).filter(o -> o instanceof DetailTypes).findFirst();
         detailType.ifPresent(dType -> {
-            switch ((DetailTypes)dType) {
-                case PUSH_ACK_CONTEXT_REJECTED :
-                    System.out.println("--------");
-                    break;
-            }
+            // switch ((DetailTypes)dType) {
+            //     case PUSH_ACK_CONTEXT_REJECTED :
+            //         System.out.println("--------");
+            //         break;
+            // }
         });
         return "[db]";
     }

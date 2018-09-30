@@ -67,7 +67,7 @@ public final class MPushServer implements MPushContext {
 
     private MonitorService monitorService;
 
-
+    private MonitorNodeService monitorNodeService;
     public MPushServer() {
         connServerNode = ServerNodes.cs();
         gatewayServerNode = ServerNodes.gs();
@@ -93,6 +93,9 @@ public final class MPushServer implements MPushContext {
         } else {
             udpGatewayServer = new GatewayUDPConnector(this);
         }
+
+        // 监听
+        monitorNodeService = new MonitorNodeService(this);
     }
 
     public boolean isTargetMachine(String host, int port) {

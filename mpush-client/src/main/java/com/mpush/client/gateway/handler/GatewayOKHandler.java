@@ -56,7 +56,7 @@ public final class GatewayOKHandler extends BaseMessageHandler<OkMessage> {
         if (message.cmd == Command.GATEWAY_PUSH.cmd) {
             PushRequest request = pushRequestBus.getAndRemove(message.getSessionId());
             if (request == null) {
-                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}, dType={}", message, DetailTypes.RECEIVE_GATEWAY_RESPONSE_REQUEST_TIMEOUT);
+                Logs.PUSH.warn("receive a gateway response, but request has timeout. message={}, dType={}", message, DetailTypes.GATEWAY_PUSH_MESSAGE);
                 return;
             }
             request.onSuccess(GatewayPushResult.fromJson(message.data));//推送成功

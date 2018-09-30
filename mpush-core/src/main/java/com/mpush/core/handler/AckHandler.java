@@ -52,7 +52,7 @@ public final class AckHandler extends BaseMessageHandler<AckMessage> {
     public void handle(AckMessage message) {
         AckTask task = ackTaskQueue.getAndRemove(message.getSessionId());
         if (task == null) {//ack 超时了
-            Logs.PUSH.info("receive client ack, but task timeout message={}, dType={}", message, DetailTypes.RECEIVE_CLIENT_ACK_TASK_TIMEOUT);
+            Logs.PUSH.info("receive client ack, but task timeout message={}, dType={}", message, DetailTypes.PUSH_MESSAGE_ACK);
             return;
         }
 

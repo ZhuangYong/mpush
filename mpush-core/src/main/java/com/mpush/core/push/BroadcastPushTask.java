@@ -110,7 +110,7 @@ public final class BroadcastPushTask implements PushTask {
                                 }
                             }
                         } else { //2.如果链接失效，先删除本地失效的路由，再查下远程路由，看用户是否登陆到其他机器
-                            Logs.PUSH.warn("[Broadcast] find router in local but conn disconnect, message={}, conn={}, dType={}", message, connection, DetailTypes.BROADCAST_FIND_ROUTER_IN_LOCAL_CONN_DISCONNECT);
+                            Logs.PUSH.warn("[Broadcast] find router in local but conn disconnect, message={}, conn={}, dType={}", message, connection, DetailTypes.BROADCAST_PUSH_MESSAGE);
                             //删除已经失效的本地路由
                             mPushServer.getRouterCenter().getLocalRouterManager().unRegister(userId, clientType);
                         }
@@ -127,7 +127,7 @@ public final class BroadcastPushTask implements PushTask {
     }
 
     private void report() {
-        Logs.PUSH.info("[Broadcast] task finished, cost={}, message={}, dType={}", (System.currentTimeMillis() - begin), message, DetailTypes.BROADCAST_TASK_FINISHED);
+        Logs.PUSH.info("[Broadcast] task finished, cost={}, message={}, dType={}", (System.currentTimeMillis() - begin), message, DetailTypes.BROADCAST_PUSH_MESSAGE);
         mPushServer.getPushCenter().getPushListener().onBroadcastComplete(message, timeLine.end().getTimePoints());//通知发送方，广播推送完毕
     }
 
@@ -147,9 +147,9 @@ public final class BroadcastPushTask implements PushTask {
     private void operationComplete(ChannelFuture future, String userId) throws Exception {
         if (future.isSuccess()) {//推送成功
             successUserIds.add(userId);
-            Logs.PUSH.info("[Broadcast] push message to client success, userId={}, message={}, dType={}", message.getUserId(), message, DetailTypes.BROADCAST_PUSH_MESSAGE_TO_CLIENT_SUCCESS);
+            Logs.PUSH.info("[Broadcast] push message to client success, userId={}, message={}, dType={}", message.getUserId(), message, DetailTypes.BROADCAST_PUSH_MESSAGE);
         } else {//推送失败
-            Logs.PUSH.warn("[Broadcast] push message to client failure, userId={}, message={}, conn={}, dType={}", message.getUserId(), message, future.channel(), DetailTypes.BROADCAST_PUSH_MESSAGE_TO_CLIENT_FAILURE);
+            Logs.PUSH.warn("[Broadcast] push message to client failure, userId={}, message={}, conn={}, dType={}", message.getUserId(), message, future.channel(), DetailTypes.BROADCAST_PUSH_MESSAGE);
         }
         if (finishTasks.decrementAndGet() == 0) {
             report();

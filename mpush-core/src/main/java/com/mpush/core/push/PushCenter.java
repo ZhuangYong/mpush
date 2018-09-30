@@ -31,6 +31,9 @@ import com.mpush.common.qps.RedisFlowControl;
 import com.mpush.monitor.jmx.MBeanRegistry;
 import com.mpush.monitor.jmx.mxbean.PushCenterBean;
 import com.mpush.tools.config.CC;
+import com.mpush.tools.log.DetailTypes;
+import com.mpush.tools.log.Logs;
+import com.mpush.tools.log.Steps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,8 +79,10 @@ public final class PushCenter extends BaseService implements MessagePusher {
                     ? new FastFlowControl(limit, max, duration)
                     : new RedisFlowControl(message.getTaskId(), max);
             addTask(new BroadcastPushTask(mPushServer, message, flowControl));
+            Logs.PUSH.info("[SingleUserPush] add message push task, message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
         } else {
             addTask(new SingleUserPushTask(mPushServer, message, globalFlowControl));
+            Logs.PUSH.info("[Broadcast] add message push task, message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
         }
     }
 

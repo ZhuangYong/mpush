@@ -84,7 +84,7 @@ public class CommonExecutorFactory implements ExecutorFactory {
             case ACK_TIMER: {
                 ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(ack_timer,
                         new NamedPoolThreadFactory(T_ARK_REQ_TIMER),
-                        (r, e) -> Logs.PUSH.error("one ack context was rejected, context={}, dType={}", r, DetailTypes.PUSH_ACK_CONTEXT_REJECTED)
+                        (r, e) -> Logs.PUSH.error("one ack context was rejected, context={}, dType={}", r, DetailTypes.PUSH_MESSAGE_ACK)
                 );
                 executor.setRemoveOnCancelPolicy(true);
                 return executor;

@@ -31,6 +31,7 @@ import com.mpush.core.session.ReusableSession;
 import com.mpush.core.session.ReusableSessionManager;
 import com.mpush.tools.common.Profiler;
 import com.mpush.tools.config.ConfigTools;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 
 import static com.mpush.common.ErrorCode.INVALID_DEVICE;
@@ -62,13 +63,13 @@ public final class FastConnectHandler extends BaseMessageHandler<FastConnectMess
         if (session == null) {
             //1.没查到说明session已经失效了
             ErrorMessage.from(message).setErrorCode(SESSION_EXPIRED).send();
-            Logs.CONN.warn("fast connect failure, session is expired, sessionId={}, deviceId={}, conn={}"
-                    , message.sessionId, message.deviceId, message.getConnection().getChannel());
+            Logs.CONN.warn("fast connect failure, session is expired, message={}, sessionId={}, deviceId={}, conn={}, dType={}"
+                    , message.sessionId, message.deviceId, message, message.getConnection().getChannel(), DetailTypes.FAST_CONN);
         } else if (!session.context.deviceId.equals(message.deviceId)) {
             //2.非法的设备, 当前设备不是上次生成session时的设备
             ErrorMessage.from(message).setErrorCode(INVALID_DEVICE).send();
-            Logs.CONN.warn("fast connect failure, not the same device, deviceId={}, session={}, conn={}"
-                    , message.deviceId, session.context, message.getConnection().getChannel());
+            Logs.CONN.warn("fast connect failure, not the same device, message={}, deviceId={}, session={}, conn={}, dType={}"
+                    , message.deviceId, session.context, message, message.getConnection().getChannel(), DetailTypes.FAST_CONN);
         } else {
             //3.校验成功，重新计算心跳，完成快速重连
             int heartbeat = ConfigTools.getHeartbeat(message.minHeartbeat, message.maxHeartbeat);
@@ -82,9 +83,9 @@ public final class FastConnectHandler extends BaseMessageHandler<FastConnectMess
                         if (f.isSuccess()) {
                             //4. 恢复缓存的会话信息(包含会话密钥等)
                             message.getConnection().setSessionContext(session.context);
-                            Logs.CONN.info("fast connect success, session={}, conn={}", session.context, message.getConnection().getChannel());
+                            Logs.CONN.info("fast connect success, message={}, session={}, conn={}, dType={}", message, session.context, message.getConnection().getChannel(), DetailTypes.FAST_CONN);
                         } else {
-                            Logs.CONN.info("fast connect failure, session={}, conn={}", session.context, message.getConnection().getChannel());
+                            Logs.CONN.info("fast connect failure, message={}, session={}, conn={}, dType={}", message, session.context, message.getConnection().getChannel(), DetailTypes.FAST_CONN);
                         }
                     });
 

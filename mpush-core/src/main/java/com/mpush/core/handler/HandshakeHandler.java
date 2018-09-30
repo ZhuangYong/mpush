@@ -22,6 +22,7 @@ package com.mpush.core.handler;
 import com.google.common.base.Strings;
 import com.mpush.api.connection.Connection;
 import com.mpush.api.connection.SessionContext;
+import com.mpush.api.event.TrackUserMessageEvent;
 import com.mpush.api.protocol.Packet;
 import com.mpush.common.handler.BaseMessageHandler;
 import com.mpush.common.message.ErrorMessage;
@@ -33,6 +34,8 @@ import com.mpush.core.MPushServer;
 import com.mpush.core.session.ReusableSession;
 import com.mpush.core.session.ReusableSessionManager;
 import com.mpush.tools.config.ConfigTools;
+import com.mpush.tools.event.EventBus;
+import com.mpush.tools.log.DetailTypes;
 import com.mpush.tools.log.Logs;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -77,7 +80,7 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
                 || iv.length != CipherBox.I.getAesKeyLength()
                 || clientKey.length != CipherBox.I.getAesKeyLength()) {
             ErrorMessage.from(message).setReason("Param invalid").close();
-            Logs.CONN.error("handshake failure, message={}, conn={}", message, message.getConnection());
+            Logs.CONN.error("handshake failure, message={}, conn={}, dType={}", message, message.getConnection(), DetailTypes.HANDSHAKE);
             return;
         }
 
@@ -85,7 +88,7 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
         SessionContext context = message.getConnection().getSessionContext();
         if (message.deviceId.equals(context.deviceId)) {
             ErrorMessage.from(message).setErrorCode(REPEAT_HANDSHAKE).send();
-            Logs.CONN.warn("handshake failure, repeat handshake, conn={}", message.getConnection());
+            Logs.CONN.warn("handshake failure, repeat handshake, conn={}, dType={}", message.getConnection(), DetailTypes.HANDSHAKE);
             return;
         }
 
@@ -119,9 +122,9 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
                                 //9.保存可复用session到Redis, 用于快速重连
                                 reusableSessionManager.cacheSession(session);
 
-                                Logs.CONN.info("handshake success, conn={}", message.getConnection());
+                                Logs.CONN.info("handshake success, message={}, conn={}, dType={}", message, message.getConnection(), DetailTypes.HANDSHAKE);
                             } else {
-                                Logs.CONN.info("handshake failure, conn={}", message.getConnection(), f.cause());
+                                Logs.CONN.info("handshake failure, message={}, conn={}, cause={}, dType={}", message, message.getConnection(), f.cause(), DetailTypes.HANDSHAKE);
                             }
                         }
                 );
@@ -132,7 +135,7 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
         //1.校验客户端消息字段
         if (Strings.isNullOrEmpty(message.deviceId)) {
             ErrorMessage.from(message).setReason("Param invalid").close();
-            Logs.CONN.error("handshake failure, message={}, conn={}", message, message.getConnection());
+            Logs.CONN.error("handshake failure, message={}, conn={}, dType={}", message, message.getConnection(), DetailTypes.HANDSHAKE);
             return;
         }
 
@@ -140,7 +143,7 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
         SessionContext context = message.getConnection().getSessionContext();
         if (message.deviceId.equals(context.deviceId)) {
             ErrorMessage.from(message).setErrorCode(REPEAT_HANDSHAKE).send();
-            Logs.CONN.warn("handshake failure, repeat handshake, conn={}", message.getConnection());
+            Logs.CONN.warn("handshake failure, repeat handshake, message={}, conn={}, dType={}", message, message.getConnection(), DetailTypes.HANDSHAKE);
             return;
         }
 
@@ -154,7 +157,7 @@ public final class HandshakeHandler extends BaseMessageHandler<HandshakeMessage>
                 .setDeviceId(message.deviceId)
                 .setHeartbeat(Integer.MAX_VALUE);
 
-        Logs.CONN.info("handshake success, conn={}", message.getConnection());
+        Logs.CONN.info("handshake success, message={}, conn={}, dType={}", message, message.getConnection(), DetailTypes.HANDSHAKE);
 
     }
 }

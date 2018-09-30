@@ -70,7 +70,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
             });
         } else {
             Logs.PUSH.warn("push message to client success, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.PUSH_MESSAGE_TO_CLIENT_SUCCESS_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -94,7 +94,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
 
         } else {
             Logs.PUSH.warn("client ack success, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.CLIENT_ACK_SUCCESS_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -116,7 +116,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
             });
         } else {
             Logs.PUSH.warn("broadcast to client finish, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.BROADCAST_TO_CLIENT_FINISH_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -140,7 +140,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
             });
         } else {
             Logs.PUSH.warn("push message to client failure, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.PUSH_MESSAGE_TO_CLIENT_FAILURE_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -164,7 +164,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
             });
         } else {
             Logs.PUSH.warn("push message to client offline, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.PUSH_MESSAGE_TO_CLIENT_OFFLINE_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -188,7 +188,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
             });
         } else {
             Logs.PUSH.warn("push message to client redirect, but gateway connection is closed, timePoints={}, message={}, dType={}"
-                    , Jsons.toJson(timePoints), message, DetailTypes.PUSH_MESSAGE_TO_CLIENT_REDIRECT_GATEWAY_CONNECTION_CLOSED);
+                    , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
         }
     }
 
@@ -196,7 +196,7 @@ public final class GatewayPushListener implements PushListener<GatewayPushMessag
     @Override
     public void onTimeout(GatewayPushMessage message, Object[] timePoints) {
         Logs.PUSH.warn("push message to client timeout, timePoints={}, message={}, dType={}"
-                , Jsons.toJson(timePoints), message, DetailTypes.PUSH_MESSAGE_TO_CLIENT_TIMEOUT);
+                , Jsons.toJson(timePoints), message, DetailTypes.GATEWAY_PUSH_MESSAGE);
     }
 
     @Override

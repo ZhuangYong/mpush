@@ -29,6 +29,10 @@ public final class CacheKeys {
 
     private static final String ONLINE_USER_LIST_KEY_PREFIX = "mp:oul:";//在线用户列表
 
+    private static final String ALL_USER_LIST_KEY_PREFIX = "mp:aul:";// 所有用户列表
+
+    private static final String TRACK_USER_KEY_PREFIX = "mp:tur:";// 跟踪用户
+
     public static final String SESSION_AES_KEY = "mp:sa";
     public static final String SESSION_AES_SEQ_KEY = "mp:sas";
     public static final String PUSH_TASK_PREFIX = "mp:pt";
@@ -47,6 +51,14 @@ public final class CacheKeys {
 
     public static String getOnlineUserListKey(String publicIP) {
         return ONLINE_USER_LIST_KEY_PREFIX + publicIP;
+    }
+
+    public static String getAllUserListKey(String publicIP) {
+        return ALL_USER_LIST_KEY_PREFIX + publicIP;
+    }
+
+    public static String trackUserKey(String publicIP) {
+        return TRACK_USER_KEY_PREFIX + publicIP;
     }
 
     public static String getPushTaskKey(String taskId) {
