@@ -31,6 +31,7 @@ import io.netty.channel.ChannelFutureListener;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,10 +47,12 @@ public abstract class BaseMessage implements Message {
     transient protected Packet packet;
     transient protected Connection connection;
     transient private byte status = 0;
+    private String hash;
 
     public BaseMessage(Packet packet, Connection connection) {
         this.packet = packet;
         this.connection = connection;
+        this.hash = UUID.randomUUID().toString();
     }
 
     @Override
@@ -227,6 +230,10 @@ public abstract class BaseMessage implements Message {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     public ScheduledExecutorService getExecutor() {

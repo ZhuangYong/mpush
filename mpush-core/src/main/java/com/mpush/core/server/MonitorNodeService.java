@@ -3,6 +3,8 @@ package com.mpush.core.server;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
 import com.mpush.api.event.TrackUserMessageEvent;
+import com.mpush.api.protocol.Command;
+import com.mpush.api.protocol.JsonPacket;
 import com.mpush.api.protocol.Packet;
 import com.mpush.api.router.ClientLocation;
 import com.mpush.api.spi.common.CacheManager;
@@ -16,6 +18,8 @@ import com.mpush.tools.event.EventBus;
 
 import java.util.List;
 import java.util.Set;
+
+import static com.mpush.tools.config.CC.mp.net.tcpGateway;
 
 public class MonitorNodeService {
 
@@ -50,17 +54,17 @@ public class MonitorNodeService {
      */
     private void trackSendMessage(TrackUserMessageEvent event, BaseMessage message) {
         String userId = event.getUserId();
-        if (userId == null) {
-            userId = message.getConnection().getSessionContext().userId;
-        }
+        String formUserId = message.getConnection().getSessionContext().userId;
         String trackUserKey = CacheKeys.trackUserKey(userId);
         List<String> monitorUsers = cacheManager.zrange(trackUserKey, 0, 100, String.class);
         // 在跟踪列表
         if (monitorUsers != null) {
             JSONObject content = new JSONObject();
-            content.put("message", message.getPacket().toString().getBytes());
-            content.put("sessionId", event.getSessionId());
-            content.put("userId", event.getUserId());
+            content.put("message", JSONObject.toJSON(message.getPacket()).toString());
+            content.put("sessionId", -message.getSessionId());
+            content.put("hash", message.getHash());
+            content.put("formUserId", formUserId);
+            content.put("userId", userId);
             content.put("time", event.getTime());
             content.put("desc", event.getDesc());
 
@@ -70,8 +74,9 @@ public class MonitorNodeService {
                     monitor.forEach(m -> {
                         ClientLocation clientLocation = m.getRouteValue();
                         Packet packet = message.getPacket();
-                        packet.sessionId = -message.getSessionId();
-                        GatewayPushMessage msg = new GatewayPushMessage(packet, message.getConnection());
+                        JsonPacket jsonPacket = new JsonPacket(Command.toCMD(packet.cmd), -message.getSessionId());
+                        jsonPacket.setBody(packet.body);
+                        GatewayPushMessage msg = new GatewayPushMessage(jsonPacket, message.getConnection());
                         packet.flags = 0;
                         msg.userId = monitorUserId;
                         msg.clientType = clientLocation.getClientType();
