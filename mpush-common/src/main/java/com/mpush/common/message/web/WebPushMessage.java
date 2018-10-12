@@ -2,6 +2,7 @@ package com.mpush.common.message.web;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.mpush.api.Constants;
 import com.mpush.api.common.Condition;
 import com.mpush.api.connection.Connection;
 import com.mpush.api.protocol.Packet;
@@ -45,7 +46,7 @@ public final class WebPushMessage extends ByteBufMessage implements IPushMessage
         userId = jsonBody.getString("userId");
         clientType = jsonBody.getInteger("clientType");
         timeout = Optional.ofNullable(jsonBody.getInteger("timeout")).orElse(0);
-        content = (jsonBody.getString("content") + "").getBytes();
+        content = (jsonBody.getString("content") + "").getBytes(Constants.UTF_8);
         taskId = jsonBody.getString("taskId");
         tags = new HashSet<String>(Arrays.asList((jsonBody.getString("tags") + "").split(",")));
         condition = jsonBody.getString("condition");

@@ -63,7 +63,7 @@ public final class UserManager {
     }
 
     public void kickUser(String userId, int clientType) {
-        Set<RemoteRouter> remoteRouters = remoteRouterManager.lookupAll(userId);
+        Set<RemoteRouter> remoteRouters = lookupAll(userId);
         if (remoteRouters != null) {
             for (RemoteRouter remoteRouter : remoteRouters) {
                 ClientLocation location = remoteRouter.getRouteValue();

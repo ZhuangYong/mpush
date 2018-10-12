@@ -79,21 +79,21 @@ public final class PushCenter extends BaseService implements MessagePusher {
                     ? new FastFlowControl(limit, max, duration)
                     : new RedisFlowControl(message.getTaskId(), max);
             addTask(new BroadcastPushTask(mPushServer, message, flowControl));
-            Logs.PUSH.info("[SingleUserPush] add message push task, message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
+            Logs.PUSH.info("[Broadcast] add message push task. message={}, dType={}", message, DetailTypes.BROADCAST_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
         } else {
             addTask(new SingleUserPushTask(mPushServer, message, globalFlowControl));
-            Logs.PUSH.info("[Broadcast] add message push task, message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
+            Logs.PUSH.info("[SingleUserPush] add message push task. message={}, dType={}", message, DetailTypes.SINGLE_USER_PUSH_MESSAGE, Steps.PUSH_ADD_TASK);
         }
     }
 
     public void addTask(PushTask task) {
         executor.addTask(task);
-        logger.debug("add new task to push center, count={}, task={}", taskNum.incrementAndGet(), task);
+        logger.debug("add new task to push center. count={}, task={}", taskNum.incrementAndGet(), task);
     }
 
     public void delayTask(long delay, PushTask task) {
         executor.delayTask(delay, task);
-        logger.debug("delay task to push center, count={}, task={}", taskNum.incrementAndGet(), task);
+        logger.debug("delay task to push center. count={}, task={}", taskNum.incrementAndGet(), task);
     }
 
     @Override

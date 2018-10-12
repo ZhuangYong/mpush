@@ -54,7 +54,7 @@ public class PushClientTestMain {
 
             PushContext context = PushContext.build(msg)
                     .setAckModel(AckModel.AUTO_ACK)
-                    .setUserId("user-" + i)
+                    .setUserId("user-" + 3)
                     .setBroadcast(false)
                     //.setTags(Sets.newHashSet("test"))
                     //.setCondition("tags&&tags.indexOf('test')!=-1")

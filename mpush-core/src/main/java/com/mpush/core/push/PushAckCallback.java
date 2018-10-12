@@ -21,12 +21,12 @@ public final class PushAckCallback implements AckCallback {
     @Override
     public void onSuccess(AckTask task) {
         pushCenter.getPushListener().onAckSuccess(message, timeLine.successEnd().getTimePoints());
-        Logs.PUSH.info("[SingleUserPush] client ack success, timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.PUSH_MESSAGE_ACK);
+        Logs.PUSH.info("[SingleUserPush] client ack success. timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.PUSH_MESSAGE_ACK);
     }
 
     @Override
     public void onTimeout(AckTask task) {
         pushCenter.getPushListener().onTimeout(message, timeLine.timeoutEnd().getTimePoints());
-        Logs.PUSH.warn("[SingleUserPush] client ack timeout, timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.PUSH_MESSAGE_ACK);
+        Logs.PUSH.warn("[SingleUserPush] client ack timeout. timeLine={}, task={}, message={}, dType={}", timeLine, task, message, DetailTypes.PUSH_MESSAGE_ACK);
     }
 }

@@ -2,6 +2,7 @@ package com.mpush.core.server;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
+import com.mpush.api.Constants;
 import com.mpush.api.event.TrackUserMessageEvent;
 import com.mpush.api.protocol.Command;
 import com.mpush.api.protocol.JsonPacket;
@@ -53,10 +54,17 @@ public class MonitorNodeService {
      * @param event
      */
     private void trackSendMessage(TrackUserMessageEvent event, BaseMessage message) {
+        if (message.getSessionId() < 0) {
+            return;
+        }
         String userId = event.getUserId();
         String formUserId = message.getConnection().getSessionContext().userId;
         String trackUserKey = CacheKeys.trackUserKey(userId);
         List<String> monitorUsers = cacheManager.zrange(trackUserKey, 0, 100, String.class);
+        if (monitorUsers == null || monitorUsers.isEmpty()) {
+            trackUserKey = CacheKeys.trackUserKey(formUserId);
+            monitorUsers = cacheManager.zrange(trackUserKey, 0, 100, String.class);
+        }
         // 在跟踪列表
         if (monitorUsers != null) {
             JSONObject content = new JSONObject();
@@ -77,11 +85,11 @@ public class MonitorNodeService {
                         JsonPacket jsonPacket = new JsonPacket(Command.toCMD(packet.cmd), -message.getSessionId());
                         jsonPacket.setBody(packet.body);
                         GatewayPushMessage msg = new GatewayPushMessage(jsonPacket, message.getConnection());
-                        packet.flags = 0;
+                        packet.flags = Packet.FLAG_AUTO_ACK;
                         msg.userId = monitorUserId;
                         msg.clientType = clientLocation.getClientType();
                         msg.timeout = 3000;
-                        msg.content = content.toString().getBytes();
+                        msg.content = content.toString().getBytes(Constants.UTF_8);
                         mPushServer.getPushCenter().push(msg);
                     });
                 }
