@@ -19,6 +19,7 @@
 
 package com.mpush.common.router;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.mpush.api.connection.Connection;
@@ -29,6 +30,7 @@ import com.mpush.api.router.RouterManager;
 import com.mpush.api.spi.common.CacheManager;
 import com.mpush.api.spi.common.CacheManagerFactory;
 import com.mpush.common.CacheKeys;
+import com.mpush.tools.config.ConfigTools;
 import com.mpush.tools.event.EventConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,8 @@ public class RemoteRouterManager extends EventConsumer implements RouterManager<
         String key = CacheKeys.getUserRouteKey(userId);
         String field = Integer.toString(router.getRouteValue().getClientType());
         ClientLocation old = cacheManager.hget(key, field, ClientLocation.class);
+        JSONObject routerJson =  JSONObject.parseObject(router.getRouteValue().toJson());
+        routerJson.replace("host", ConfigTools.getPublicIp());
         cacheManager.hset(key, field, router.getRouteValue().toJson());
         LOGGER.info("register remote router success userId={}, newRouter={}, oldRoute={}", userId, router, old);
         return old == null ? null : new RemoteRouter(old);

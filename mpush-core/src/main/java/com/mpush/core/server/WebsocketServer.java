@@ -73,7 +73,7 @@ public final class WebsocketServer extends NettyTCPServer {
         messageDispatcher.register(Command.UNBIND, () -> new BindUserHandler(mPushServer));
         messageDispatcher.register(Command.PUSH, PushHandlerFactory::create);
         messageDispatcher.register(Command.ACK, () -> new AckHandler(mPushServer));
-        messageDispatcher.register(Command.GATEWAY_PUSH, () -> new WebSocketPushHandler(mPushServer.getPushCenter()));
+        messageDispatcher.register(Command.GATEWAY_PUSH, () -> new WebSocketPushHandler(mPushServer));
     }
 
     @Override
